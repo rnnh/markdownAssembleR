@@ -1,0 +1,12 @@
+Package: markdownAssembleR
+Title: Assemble Markdown Files into Larger Documents
+Version: 0.0.0.9000
+Authors@R: 
+    person("Ronan", "Harrington", , "ronan_harr@protonmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0616-907X"))
+Description: Concatenates multiple markdown files together and renders
+    a larger document (e.g. a PDF using LaTeX, or a HTML page).
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.0
