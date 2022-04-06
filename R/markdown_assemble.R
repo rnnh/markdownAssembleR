@@ -18,9 +18,9 @@ markdown_assemble <- function(title, author, directory){
 
   title_author_tex_options = c('---',
                                paste0('title: "', title, '"'),
-                               paste0('author: "', author, '"'),
+                               paste0('author: ', noquote(author)),
                                'date: "`r Sys.Date()`"',
-'output:
+noquote('output:
   rmdformats::downcute:
     highlight: tango
 ---
@@ -28,7 +28,7 @@ markdown_assemble <- function(title, author, directory){
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
-```',
+```'),
   collapse = "\r\n\r\n")
 
   file_selection_pattern <- "[[:xdigit:]]*.md"
@@ -37,23 +37,25 @@ knitr::opts_chunk$set(cache = TRUE)
 
   markdown_file_list <- list.files(path = directory,
                                    pattern = file_selection_pattern)
+  markdown_file_list <- paste0(directory, markdown_file_list)
 
   date_order <- str_sub(markdown_file_list, start = -11, end = -4) %>%
     order(decreasing = TRUE)
 
   markdown_file_list <- markdown_file_list[date_order]
   markdown_files <- lapply(markdown_file_list, read_file) %>% cbind() %>%
-    unlist()
+    unlist() %>% paste0("\r\n")
 
   markdown_file <- str_c(c(title_author_tex_options, markdown_files),
-                         collapse = "\r\n\r\n")
+                         collapse = "\r\n")
 
   output_file <- file(description = output_file_name)
   writeLines(markdown_file, output_file)
   close(output_file)
 
   #options(knitr.duplicate.label = "allow")
-  render(input = output_file_name, output_format = "rmdformats::downcute")
+  render(input = output_file_name, output_format = "rmdformats::downcute",
+         output_dir = directory)
 
   file.remove(output_file_name)
 }
