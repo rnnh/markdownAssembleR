@@ -16,20 +16,20 @@
 #'
 markdown_assemble <- function(title, author, directory){
 
-  title_author_tex_options = c('---',
-                               paste0('title: "', title, '"'),
-                               paste0('author: ', noquote(author)),
-                               'date: "`r Sys.Date()`"',
-noquote('output:
-  rmdformats::downcute:
-    highlight: tango
+  yaml_header <- c('---',
+                   paste0('title: "', title, '"'),
+                   paste0('author: ', noquote(author)),
+                   'date: "`r Sys.Date()`"',
+                   noquote('output:
+rmdformats::downcute:
+  highlight: tango
 ---
 
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
 ```'),
-  collapse = "\r\n\r\n")
+                   collapse = "\r\n\r\n")
 
   file_selection_pattern <- "[[:xdigit:]]*.md"
 
@@ -46,7 +46,7 @@ knitr::opts_chunk$set(cache = TRUE)
   markdown_files <- lapply(markdown_file_list, read_file) %>% cbind() %>%
     unlist() %>% paste0("\r\n")
 
-  markdown_file <- str_c(c(title_author_tex_options, markdown_files),
+  markdown_file <- str_c(c(yaml_header, markdown_files),
                          collapse = "\r\n")
 
   output_file <- file(description = output_file_name)
